@@ -296,27 +296,12 @@
 
 <section id="contact">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">문의</span><h2>궁금한 점을 남겨주세요</h2><p>문의 내용을 입력하면 유형이 자동으로 분류되어 저장됩니다.</p></div>
+    <div class="section-head"><span class="eyebrow">문의</span><h2>궁금한 점을 남겨주세요</h2><p>이름과 연락처를 남겨주시면 순서대로 연락드리겠습니다.</p></div>
     <div class="contact-grid">
       <form id="inquiryForm" novalidate>
         <div class="field-row">
           <div class="field"><label for="f-name">이름</label><input id="f-name" name="name" type="text" required autocomplete="name" placeholder="홍길동" /></div>
           <div class="field"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000" /></div>
-        </div>
-        <div class="field">
-          <label for="f-category">문의 유형</label>
-          <select id="f-category" name="category" required>
-            <option value="">선택해주세요</option>
-            <option value="소통방 가입 문의">소통방 가입 문의</option>
-            <option value="급등주 정보 문의">급등주 정보 문의</option>
-            <option value="테마주 문의">테마주 문의</option>
-            <option value="기타 문의">기타 문의</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="f-message">문의 내용</label>
-          <textarea id="f-message" name="message" required placeholder="문의하실 내용을 적어주세요"></textarea>
-          <span class="auto-tag mono" id="autoTagHint"></span>
         </div>
         <div class="consent-block">
           <div class="consent-detail" id="consentDetails">
@@ -328,7 +313,7 @@
               </div>
             </div>
             <ul>
-              <li>수집 항목: 이름, 연락처, 문의 내용</li>
+              <li>수집 항목: 이름, 연락처</li>
               <li>수집·이용 목적: 문의·상담 접수 및 답변</li>
               <li>보유·이용 기간: 문의 처리 완료 후 1년 보관 후 파기</li>
               <li>동의를 거부할 권리가 있으며, 미동의 시 문의 접수가 제한될 수 있습니다.</li>
@@ -352,7 +337,7 @@
 <section class="dashboard" id="dashboard">
   <div class="wrap">
     <div class="dash-head">
-      <div><span class="eyebrow">관리자 뷰</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">문의 현황 · 자동 분류</h2></div>
+      <div><span class="eyebrow">관리자 뷰</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">문의 현황</h2></div>
       <div class="chip-row" id="chipRow"></div>
     </div>
     <div class="dash-list" id="dashList"><div class="empty-state">아직 저장된 문의가 없습니다.</div></div>
@@ -393,39 +378,6 @@
   }).join('');
   tickerTrack.innerHTML = tickerItems + tickerItems;
 
-  // --- Auto classification (소통방 가입 / 급등주 정보 / 테마주 / 기타) ---
-  var CATEGORY_RULES = [
-    { category: '소통방 가입 문의', keywords: ['가입', '소통방', 'vip', '멤버십', '구독', '요금', '가격', '결제', '신청'] },
-    { category: '급등주 정보 문의', keywords: ['급등', '상한가', '매수', '종목추천', '급등주'] },
-    { category: '테마주 문의', keywords: ['테마', '섹터', '수혜주', '테마주'] }
-  ];
-
-  function classify(text) {
-    var lower = (text || '').toLowerCase();
-    for (var i = 0; i < CATEGORY_RULES.length; i++) {
-      var rule = CATEGORY_RULES[i];
-      for (var j = 0; j < rule.keywords.length; j++) {
-        if (lower.indexOf(rule.keywords[j].toLowerCase()) !== -1) return rule.category;
-      }
-    }
-    return null;
-  }
-
-  var messageEl = document.getElementById('f-message');
-  var categoryEl = document.getElementById('f-category');
-  var autoTagHint = document.getElementById('autoTagHint');
-  var categoryTouchedByUser = false;
-  categoryEl.addEventListener('change', function () { categoryTouchedByUser = true; });
-  messageEl.addEventListener('input', function () {
-    var guess = classify(messageEl.value);
-    if (guess) {
-      autoTagHint.textContent = '자동 분류 → ' + guess;
-      if (!categoryTouchedByUser) categoryEl.value = guess;
-    } else {
-      autoTagHint.textContent = '';
-    }
-  });
-
   // --- Consent timestamp: captured at the moment the checkbox is checked ---
   var consentEl = document.getElementById('f-consent');
   var consentAt = null;
@@ -452,16 +404,13 @@
     var data = {
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
-      category: form.category.value,
-      message: form.message.value.trim(),
       consent: form.consent.checked
     };
-    if (!data.name || !data.phone || !data.category || !data.message || !data.consent) {
+    if (!data.name || !data.phone || !data.consent) {
       showStatus('필수 항목을 모두 입력하고 개인정보 동의에 체크해주세요.', false);
       return;
     }
 
-    var autoTag = classify(data.message) || '기타 문의';
     var phoneKey = normalizePhone(data.phone);
     submitBtn.disabled = true;
     submitBtn.textContent = '전송 중...';
@@ -475,9 +424,6 @@
           name: data.name,
           phone: data.phone,
           phoneKey: phoneKey,
-          category: data.category,
-          autoTag: autoTag,
-          message: data.message,
           status: 'new',
           consentAt: consentAt || new Date().toISOString(),
           createdAt: new Date().toISOString()
@@ -486,8 +432,6 @@
     }).then(function () {
       showStatus('문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
       form.reset();
-      autoTagHint.textContent = '';
-      categoryTouchedByUser = false;
       consentAt = null;
     }).catch(function () {
       showStatus('지금은 자동 저장을 사용할 수 없습니다. 잠시 후 다시 시도하거나 다른 채널로 문의해주세요.', false);
@@ -498,7 +442,6 @@
   });
 
   // --- Admin dashboard ---
-  var ALL_CATEGORIES = ['소통방 가입 문의', '급등주 정보 문의', '테마주 문의', '기타 문의'];
   var dashToggle = document.getElementById('dashToggle');
   var dashboard = document.getElementById('dashboard');
   var chipRow = document.getElementById('chipRow');
@@ -511,16 +454,7 @@
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
 
   function renderChips() {
-    var counts = {};
-    ALL_CATEGORIES.forEach(function (c) { counts[c] = 0; });
-    mainDocs.forEach(function (d) {
-      var cat = d.category && counts.hasOwnProperty(d.category) ? d.category : '기타 문의';
-      counts[cat] = (counts[cat] || 0) + 1;
-    });
     var chips = ['<button type="button" class="chip ' + (activeFilter === 'all' ? 'active' : '') + '" data-cat="all">전체 <span class="count">' + mainDocs.length + '</span></button>'];
-    ALL_CATEGORIES.forEach(function (c) {
-      if (counts[c] > 0 || c === activeFilter) chips.push('<button type="button" class="chip ' + (activeFilter === c ? 'active' : '') + '" data-cat="' + c + '">' + c + ' <span class="count">' + counts[c] + '</span></button>');
-    });
     chips.push('<button type="button" class="chip dup ' + (activeFilter === 'dup' ? 'active' : '') + '" data-cat="dup">중복 전화번호 <span class="count">' + dupDocs.length + '</span></button>');
     chipRow.innerHTML = chips.join('');
     Array.prototype.forEach.call(chipRow.querySelectorAll('.chip'), function (btn) {
@@ -531,16 +465,14 @@
   function cardHtml(d) {
     var time = d.createdAt ? new Date(d.createdAt).toLocaleString('ko-KR') : '';
     return '<div class="inquiry-card">' +
-      '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span>' +
-      '<span class="pill up">' + esc(d.category || '기타 문의') + '</span>' +
-      (d.autoTag && d.autoTag !== d.category ? '<span class="pill down">자동: ' + esc(d.autoTag) + '</span>' : '') + '</div>' +
+      '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span></div>' +
       '<span class="inquiry-time">' + esc(time) + '</span>' +
       '<span class="inquiry-meta">' + esc(d.phone) + '</span>' +
-      '<p class="inquiry-msg">' + esc(d.message) + '</p></div>';
+      '</div>';
   }
 
   function renderList() {
-    var list = activeFilter === 'dup' ? dupDocs : (activeFilter === 'all' ? mainDocs : mainDocs.filter(function (d) { return (d.category || '기타 문의') === activeFilter; }));
+    var list = activeFilter === 'dup' ? dupDocs : mainDocs;
     dashList.innerHTML = list.length ? list.map(cardHtml).join('') : '<div class="empty-state">해당 조건의 문의가 없습니다.</div>';
   }
 
