@@ -1,47 +1,99 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>도파민 사냥꾼</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>경제주식</title>
+</head>
+<body>
+<style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
   :root {
-    --bg: #FBF6F1; --surface: #FFFFFF; --surface-alt: #F2E8DD; --ink: #1C1512; --ink-muted: #7A6A5E;
-    --up: #E1402A; --up-soft: #FBE4DF; --down: #2F62D6; --down-soft: #E3EBFB;
-    --gold: #B67C15; --gold-soft: #F6E7C4; --border: #E4D5C4;
-    --shadow: 0 20px 40px -28px rgba(28, 21, 18, 0.35); --focus: #E1402A; color-scheme: light;
+    --bg: #FBF6F1;
+    --surface: #FFFFFF;
+    --surface-alt: #F2E8DD;
+    --ink: #1C1512;
+    --ink-muted: #7A6A5E;
+    --up: #E1402A;
+    --up-soft: #FBE4DF;
+    --down: #2F62D6;
+    --down-soft: #E3EBFB;
+    --gold: #B67C15;
+    --gold-soft: #F6E7C4;
+    --border: #E4D5C4;
+    --shadow: 0 20px 40px -28px rgba(28, 21, 18, 0.35);
+    --focus: #E1402A;
+    color-scheme: light;
   }
+
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #15100E; --surface: #1E1714; --surface-alt: #251C17; --ink: #F6EEE7; --ink-muted: #A8998C;
-      --up: #FF5B45; --up-soft: #3A1E19; --down: #6E93FF; --down-soft: #1B2542;
-      --gold: #F0B429; --gold-soft: #3A2C11; --border: #362A22;
-      --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); color-scheme: dark;
+      --bg: #15100E;
+      --surface: #1E1714;
+      --surface-alt: #251C17;
+      --ink: #F6EEE7;
+      --ink-muted: #A8998C;
+      --up: #FF5B45;
+      --up-soft: #3A1E19;
+      --down: #6E93FF;
+      --down-soft: #1B2542;
+      --gold: #F0B429;
+      --gold-soft: #3A2C11;
+      --border: #362A22;
+      --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+      color-scheme: dark;
     }
   }
+
   :root[data-theme="dark"] {
-    --bg: #15100E; --surface: #1E1714; --surface-alt: #251C17; --ink: #F6EEE7; --ink-muted: #A8998C;
-    --up: #FF5B45; --up-soft: #3A1E19; --down: #6E93FF; --down-soft: #1B2542;
-    --gold: #F0B429; --gold-soft: #3A2C11; --border: #362A22;
-    --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6); color-scheme: dark;
+    --bg: #15100E;
+    --surface: #1E1714;
+    --surface-alt: #251C17;
+    --ink: #F6EEE7;
+    --ink-muted: #A8998C;
+    --up: #FF5B45;
+    --up-soft: #3A1E19;
+    --down: #6E93FF;
+    --down-soft: #1B2542;
+    --gold: #F0B429;
+    --gold-soft: #3A2C11;
+    --border: #362A22;
+    --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
   }
+
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Noto Sans KR', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
   .display { font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif; }
+
   h1, h2, h3 { text-wrap: balance; margin: 0; }
   a { color: inherit; }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* Ticker */
   .ticker-bar { background: var(--ink); color: var(--bg); overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border); }
   .ticker-track { display: inline-flex; align-items: center; gap: 40px; padding: 7px 0; animation: ticker 32s linear infinite; }
   .ticker-bar:hover .ticker-track { animation-play-state: paused; }
   @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .ticker-item { font-family: 'JetBrains Mono', monospace; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; opacity: 0.92; }
   .ticker-item .dot { width: 6px; height: 6px; border-radius: 50%; }
-  .dot.up { background: var(--up); } .dot.down { background: var(--down); }
+  .dot.up { background: var(--up); }
+  .dot.down { background: var(--down); }
   @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+  /* Header */
   header.site { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
   .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; }
   .brand { display: flex; align-items: baseline; gap: 10px; }
@@ -51,6 +103,7 @@
   .nav-links a { font-size: 14px; text-decoration: none; color: var(--ink-muted); transition: color 0.15s ease; }
   .nav-links a:hover { color: var(--ink); }
   .nav-links a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid transparent; text-decoration: none; font-family: inherit; transition: transform 0.12s ease, filter 0.12s ease; white-space: nowrap; }
   .btn:active { transform: translateY(1px); }
   .btn-primary { background: var(--up); color: #FFF8F6; }
@@ -58,6 +111,8 @@
   .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border); }
   .btn-ghost:hover { background: var(--surface-alt); }
   .btn-sm { padding: 8px 15px; font-size: 12.5px; }
+
+  /* Hero */
   .hero { padding: 48px 24px 40px; }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
   .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--up); letter-spacing: 0.04em; text-transform: uppercase; background: var(--up-soft); padding: 5px 11px; border-radius: 999px; margin-bottom: 14px; }
@@ -65,6 +120,8 @@
   .hero h1 em { font-style: normal; color: var(--up); }
   .hero p.lead { font-size: 15.5px; color: var(--ink-muted); max-width: 42ch; margin-bottom: 22px; }
   .hero-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Quote board */
   .board { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
   .board-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
   .board-head .title { font-weight: 700; font-size: 14px; }
@@ -76,30 +133,41 @@
   .board-row .name { font-weight: 600; }
   .board-row .name small { display: block; font-weight: 400; color: var(--ink-muted); font-size: 11.5px; margin-top: 2px; }
   .pill { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
-  .pill.up { background: var(--up-soft); color: var(--up); } .pill.down { background: var(--down-soft); color: var(--down); }
+  .pill.up { background: var(--up-soft); color: var(--up); }
+  .pill.down { background: var(--down-soft); color: var(--down); }
   .board-foot { padding: 9px 18px; font-size: 11px; color: var(--ink-muted); background: var(--surface-alt); }
+
+  /* Sections */
   section { padding: 52px 24px; }
   .section-head { max-width: 58ch; margin-bottom: 28px; }
   .section-head .eyebrow { margin-bottom: 10px; }
   .section-head h2 { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
   .section-head p { color: var(--ink-muted); font-size: 14.5px; }
+
   .features { background: var(--surface-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
   .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
   .card .num { font-family: 'JetBrains Mono', monospace; color: var(--up); font-weight: 700; font-size: 12px; }
   .card h3 { font-size: 16px; font-weight: 700; }
   .card p { color: var(--ink-muted); font-size: 13.5px; margin: 0; }
+
+  /* Tiers */
   .tier-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
   .tier-table th, .tier-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
   .tier-table th { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); font-weight: 600; background: var(--surface-alt); }
   .tier-table th:not(:first-child), .tier-table td:not(:first-child) { text-align: center; width: 130px; }
   .tier-table tr:last-child td { border-bottom: none; }
-  .tier-table .yes { color: var(--up); font-weight: 700; } .tier-table .no { color: var(--ink-muted); }
+  .tier-table .yes { color: var(--up); font-weight: 700; }
+  .tier-table .no { color: var(--ink-muted); }
   .tier-badge { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: var(--gold-soft); color: var(--gold); padding: 2px 7px; border-radius: 6px; margin-left: 6px; }
   .table-scroll { overflow-x: auto; }
+
+  /* Notice */
   .notice { display: flex; gap: 14px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
   .notice svg { flex-shrink: 0; margin-top: 2px; color: var(--gold); }
   .notice p { font-size: 13px; color: var(--ink-muted); margin: 0; }
+
+  /* Contact */
   .contact-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; }
   .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
   .field label { font-size: 13px; font-weight: 600; }
@@ -114,20 +182,22 @@
   .checkbox-row input:disabled { opacity: 0.45; cursor: not-allowed; }
   .checkbox-row input:disabled + label { color: var(--ink-muted); }
   .checkbox-row label { font-size: 13px; font-weight: 600; }
-  details.consent-detail { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--surface-alt); }
-  details.consent-detail summary { font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; }
-  details.consent-detail ul { margin: 8px 0 0; padding-left: 16px; font-size: 12px; color: var(--ink-muted); line-height: 1.7; }
-  #consentHint { font-size: 11.5px; color: var(--up); }
+  .consent-detail { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--surface-alt); }
+  .consent-detail .consent-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .consent-detail .consent-title { font-size: 13px; font-weight: 600; color: var(--ink); margin: 0; }
+  .consent-detail .consent-head .checkbox-row { margin: 0; align-items: center; }
+  .consent-detail ul { margin: 8px 0 0; padding-left: 16px; font-size: 12px; color: var(--ink-muted); line-height: 1.7; }
   .form-status { font-size: 13px; padding: 10px 13px; border-radius: 9px; margin-top: 4px; display: none; }
   .form-status.show { display: block; }
   .form-status.ok { background: var(--up-soft); color: var(--up); }
   .form-status.err { background: var(--down-soft); color: var(--down); }
+
   .side-card { background: var(--ink); color: var(--bg); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px; height: fit-content; }
   .side-card h3 { font-size: 17px; }
   .side-card p { font-size: 13px; opacity: 0.75; margin: 0; }
   .side-row { display: flex; justify-content: space-between; font-size: 12.5px; font-family: 'JetBrains Mono', monospace; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; }
-  .key-row { display: flex; gap: 8px; }
-  .key-row input { flex: 1; }
+
+  /* Dashboard */
   .dashboard { border-top: 1px solid var(--border); background: var(--surface-alt); display: none; }
   .dashboard.show { display: block; }
   .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
@@ -144,8 +214,10 @@
   .inquiry-msg { font-size: 13px; color: var(--ink-muted); grid-column: 1 / -1; margin: 0; }
   .inquiry-time { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
   .empty-state { text-align: center; padding: 32px 20px; color: var(--ink-muted); font-size: 13.5px; }
+
   footer { border-top: 1px solid var(--border); padding: 24px 24px; text-align: center; }
   footer p { font-size: 12px; color: var(--ink-muted); margin: 3px 0; }
+
   @media (max-width: 860px) {
     .hero-grid, .contact-grid { grid-template-columns: 1fr; }
     .card-grid { grid-template-columns: 1fr; }
@@ -154,16 +226,21 @@
     .field-row { grid-template-columns: 1fr; }
   }
 </style>
-</head>
-<body>
 
 <div class="ticker-bar" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
 
 <header class="site">
   <div class="nav wrap">
-    <div class="brand"><span class="brand-mark display">도파민 사냥꾼</span><span class="brand-tag">DOPAMINE HUNTER · RESEARCH</span></div>
-    <nav class="nav-links"><a href="#features">서비스</a><a href="#tiers">등급</a><a href="#contact">문의</a></nav>
-    <a class="btn btn-primary btn-sm" href="#contact">VIP 문의하기</a>
+    <div class="brand">
+      <span class="brand-mark display">경제주식</span>
+      <span class="brand-tag">ECONOMIC STOCK</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">서비스</a>
+      <a href="#tiers">등급</a>
+      <a href="#contact">문의</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact">소통방 문의하기</a>
   </div>
 </header>
 
@@ -171,51 +248,48 @@
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">실시간 테마 모니터링</span>
-      <h1 class="display">시장보다 먼저 보는<br><em>테마 리서치</em></h1>
-      <p class="lead">급등주·테마주 흐름을 매일 정리해 전달하는 리서치 채널입니다.</p>
-      <div class="hero-ctas"><a class="btn btn-primary" href="#contact">VIP 문의하기</a><a class="btn btn-ghost" href="#features">서비스 살펴보기</a></div>
+      <h1 class="display">시장보다 먼저 보는<br><em>테마 브리핑</em></h1>
+      <p class="lead">급등주·테마주 흐름을 매일 정리해 전달하는 정보 채널입니다.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#contact">소통방 문의하기</a>
+        <a class="btn btn-ghost" href="#features">서비스 살펴보기</a>
+      </div>
     </div>
     <div class="board">
       <div class="board-head"><span class="title">오늘의 관심 테마</span><span class="live"><span class="pulse"></span>LIVE</span></div>
       <div id="boardRows"></div>
-      <div class="board-foot">예시 데이터 · 실제 편입 종목은 VIP 리포트에서 확인</div>
+      <div class="board-foot">예시 데이터 · 실제 편입 종목은 소통방 리포트에서 확인</div>
     </div>
   </div>
 </section>
 
 <section class="features" id="features">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">서비스 소개</span><h2>세 가지로 시장을 정리합니다</h2></div>
+    <div class="section-head">
+      <span class="eyebrow">서비스 소개</span>
+      <h2>세 가지로 시장을 정리합니다</h2>
+    </div>
     <div class="card-grid">
       <div class="card"><span class="num mono">01</span><h3>데일리 테마 브리핑</h3><p>전일 수급과 뉴스를 바탕으로 오늘의 주목 테마를 아침마다 정리합니다.</p></div>
       <div class="card"><span class="num mono">02</span><h3>급등 후보 스크리닝</h3><p>거래대금 변화가 감지된 종목군과 체크포인트를 안내합니다.</p></div>
-      <div class="card"><span class="num mono">03</span><h3>VIP 리서치 노트</h3><p>테마 배경과 리스크까지 정리한 상세 노트를 VIP 회원에게 제공합니다.</p></div>
+      <div class="card"><span class="num mono">03</span><h3>소통방 상세 노트</h3><p>테마 배경과 리스크까지 정리한 상세 노트를 소통방 회원에게 제공합니다.</p></div>
     </div>
   </div>
 </section>
 
 <section id="tiers">
   <div class="wrap">
-    <div class="section-head"><span class="eyebrow">등급 안내</span><h2>무료 브리핑과 VIP 리서치</h2></div>
+    <div class="section-head"><span class="eyebrow">등급 안내</span><h2>무료 브리핑과 소통방 혜택</h2></div>
     <div class="table-scroll">
       <table class="tier-table">
-        <thead><tr><th>제공 내용</th><th>무료</th><th>VIP<span class="tier-badge">추천</span></th></tr></thead>
+        <thead><tr><th>제공 내용</th><th>무료</th><th>소통방<span class="tier-badge">추천</span></th></tr></thead>
         <tbody>
           <tr><td>데일리 테마 브리핑</td><td class="yes">✓</td><td class="yes">✓</td></tr>
           <tr><td>급등 후보 스크리닝 리스트</td><td class="no">—</td><td class="yes">✓</td></tr>
-          <tr><td>VIP 리서치 노트</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>소통방 상세 노트</td><td class="no">—</td><td class="yes">✓</td></tr>
           <tr><td>카카오톡 우선 알림·응대</td><td class="no">—</td><td class="yes">✓</td></tr>
         </tbody>
       </table>
-    </div>
-  </div>
-</section>
-
-<section id="notice" style="padding-top:0;">
-  <div class="wrap">
-    <div class="notice">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
-      <p>본 콘텐츠는 정보 제공 목적이며 투자 자문이 아닙니다. 투자 판단과 손익 책임은 투자자 본인에게 있습니다. 유사투자자문업 신고번호: [등록번호 입력] · 상호: [사업자명 입력]</p>
     </div>
   </div>
 </section>
@@ -229,12 +303,11 @@
           <div class="field"><label for="f-name">이름</label><input id="f-name" name="name" type="text" required autocomplete="name" placeholder="홍길동" /></div>
           <div class="field"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000" /></div>
         </div>
-        <div class="field"><label for="f-kakao">카카오톡 ID <span class="hint">(선택)</span></label><input id="f-kakao" name="kakaoId" type="text" placeholder="카카오톡 상담을 원하시면 입력" /></div>
         <div class="field">
           <label for="f-category">문의 유형</label>
           <select id="f-category" name="category" required>
             <option value="">선택해주세요</option>
-            <option value="VIP 가입 문의">VIP 가입 문의</option>
+            <option value="소통방 가입 문의">소통방 가입 문의</option>
             <option value="급등주 정보 문의">급등주 정보 문의</option>
             <option value="테마주 문의">테마주 문의</option>
             <option value="기타 문의">기타 문의</option>
@@ -246,27 +319,28 @@
           <span class="auto-tag mono" id="autoTagHint"></span>
         </div>
         <div class="consent-block">
-          <details class="consent-detail" id="consentDetails">
-            <summary>개인정보 수집·이용 안내 (눌러서 확인 · 필수)</summary>
+          <div class="consent-detail" id="consentDetails">
+            <div class="consent-head">
+              <p class="consent-title">개인정보 수집·이용 안내 (필수)</p>
+              <div class="checkbox-row">
+                <input id="f-consent" name="consent" type="checkbox" required />
+                <label for="f-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
+              </div>
+            </div>
             <ul>
-              <li>수집 항목: 이름, 연락처, 카카오톡 ID(선택), 문의 내용</li>
+              <li>수집 항목: 이름, 연락처, 문의 내용</li>
               <li>수집·이용 목적: 문의·상담 접수 및 답변</li>
               <li>보유·이용 기간: 문의 처리 완료 후 1년 보관 후 파기</li>
               <li>동의를 거부할 권리가 있으며, 미동의 시 문의 접수가 제한될 수 있습니다.</li>
             </ul>
-          </details>
-          <div class="checkbox-row" style="margin-top:10px;">
-            <input id="f-consent" name="consent" type="checkbox" required disabled />
-            <label for="f-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
           </div>
-          <span class="hint" id="consentHint" style="display:block; margin-left:26px; margin-top:3px;">위 내용을 먼저 확인해주세요</span>
         </div>
         <button class="btn btn-primary" type="submit" id="submitBtn">문의 남기기</button>
         <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
 
       <aside class="side-card">
-        <div><h3 class="display">도파민 사냥꾼</h3><p>급등주·테마주 리서치를 정리해 전달하는 채널입니다.</p></div>
+        <div><h3 class="display">경제주식</h3><p>급등주·테마주 정보를 정리해 전달하는 채널입니다.</p></div>
         <div class="side-row"><span>응대 시간</span><span>평일 10:00–18:00</span></div>
         <div class="side-row"><span>평균 응답</span><span>영업일 1일 이내</span></div>
         <button class="btn btn-ghost btn-sm" id="dashToggle" style="align-self: flex-start; border-color: rgba(255,255,255,0.3); color: inherit;">문의 현황 보기 (관리자)</button>
@@ -281,32 +355,20 @@
       <div><span class="eyebrow">관리자 뷰</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">문의 현황 · 자동 분류</h2></div>
       <div class="chip-row" id="chipRow"></div>
     </div>
-    <div id="keyGate" class="key-row" style="margin-bottom:16px;">
-      <input type="password" id="adminKeyInput" placeholder="관리자 비밀키 입력" />
-      <button class="btn btn-ghost btn-sm" id="keyLoadBtn">불러오기</button>
-    </div>
-    <div class="dash-list" id="dashList"><div class="empty-state">관리자 비밀키를 입력하면 문의 현황을 볼 수 있습니다.</div></div>
+    <div class="dash-list" id="dashList"><div class="empty-state">아직 저장된 문의가 없습니다.</div></div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p class="display" style="font-size:14px;">도파민 사냥꾼</p>
+    <p class="display" style="font-size:14px;">경제주식</p>
     <p>정보 제공 목적이며 투자 권유가 아닙니다. 투자 손실 책임은 본인에게 있습니다.</p>
-    <p>© 2026 도파민 사냥꾼</p>
+    <p>© 2026 경제주식</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 (function () {
-  // ⚠️ Supabase 프로젝트 설정 > API 에서 발급된 값을 여기에 붙여넣으세요.
-  var SUPABASE_URL = 'https://ptkmxhbwsxtddulgbmmc.supabase.co'; // 예: https://xxxxxxxx.supabase.co
-  var SUPABASE_ANON_KEY = 'sb_publishable_x6gtjahnRsnOF90Ci8-x8A_6V5T88HY'; // anon public key (서버 전용 service_role 키는 절대 넣지 마세요)
-  var supabaseClient = (SUPABASE_URL.indexOf('PASTE_YOUR') !== 0 && window.supabase)
-    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-    : null;
-
   var THEMES = [
     { name: 'AI 반도체', note: '수급 유입 지속', status: 'up' },
     { name: '2차전지', note: '단기 변동성 확대', status: 'down' },
@@ -331,12 +393,13 @@
   }).join('');
   tickerTrack.innerHTML = tickerItems + tickerItems;
 
-  // --- Auto classification (client-side preview; server also classifies) ---
+  // --- Auto classification (소통방 가입 / 급등주 정보 / 테마주 / 기타) ---
   var CATEGORY_RULES = [
-    { category: 'VIP 가입 문의', keywords: ['가입', 'vip', '멤버십', '구독', '요금', '가격', '결제', '신청'] },
+    { category: '소통방 가입 문의', keywords: ['가입', '소통방', 'vip', '멤버십', '구독', '요금', '가격', '결제', '신청'] },
     { category: '급등주 정보 문의', keywords: ['급등', '상한가', '매수', '종목추천', '급등주'] },
     { category: '테마주 문의', keywords: ['테마', '섹터', '수혜주', '테마주'] }
   ];
+
   function classify(text) {
     var lower = (text || '').toLowerCase();
     for (var i = 0; i < CATEGORY_RULES.length; i++) {
@@ -363,23 +426,18 @@
     }
   });
 
-  // --- Consent timestamp: captured the moment the checkbox is checked ---
+  // --- Consent timestamp: captured at the moment the checkbox is checked ---
   var consentEl = document.getElementById('f-consent');
-  var consentDetails = document.getElementById('consentDetails');
-  var consentHint = document.getElementById('consentHint');
   var consentAt = null;
 
-  // 내용을 펼쳐서(눌러서) 확인하기 전에는 동의 체크박스를 사용할 수 없게 잠가둠
-  consentDetails.addEventListener('toggle', function () {
-    if (consentDetails.open) {
-      consentEl.disabled = false;
-      consentHint.textContent = '확인하셨습니다. 동의하시면 체크해주세요.';
-    }
+  consentEl.addEventListener('change', function () {
+    consentAt = this.checked ? new Date().toISOString() : null;
   });
 
-  consentEl.addEventListener('change', function () { consentAt = this.checked ? new Date().toISOString() : null; });
+  function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
 
-  // --- Submit to Google Sheets via Apps Script Web App ---
+  // --- DB wiring (Claude db capability: signed-in org viewers only) ---
+  var dbPromise = (window.claude && window.claude.use) ? window.claude.use('db') : Promise.resolve(null);
   var form = document.getElementById('inquiryForm');
   var statusEl = document.getElementById('formStatus');
   var submitBtn = document.getElementById('submitBtn');
@@ -394,36 +452,39 @@
     var data = {
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
-      kakaoId: form.kakaoId.value.trim(),
       category: form.category.value,
       message: form.message.value.trim(),
-      consent: form.consent.checked,
-      consentAt: consentAt
+      consent: form.consent.checked
     };
     if (!data.name || !data.phone || !data.category || !data.message || !data.consent) {
       showStatus('필수 항목을 모두 입력하고 개인정보 동의에 체크해주세요.', false);
       return;
     }
-    if (!supabaseClient) {
-      showStatus('아직 Supabase 연동 정보(SUPABASE_URL / SUPABASE_ANON_KEY)가 설정되지 않았습니다.', false);
-      return;
-    }
 
+    var autoTag = classify(data.message) || '기타 문의';
+    var phoneKey = normalizePhone(data.phone);
     submitBtn.disabled = true;
     submitBtn.textContent = '전송 중...';
 
-    supabaseClient.rpc('submit_inquiry', {
-      p_name: data.name,
-      p_phone: data.phone,
-      p_kakao_id: data.kakaoId || null,
-      p_category: data.category,
-      p_message: data.message,
-      p_consent_at: data.consentAt
-    }).then(function (res) {
-      if (res.error) throw res.error;
-      var result = res.data;
-      if (!result || !result.ok) throw new Error((result && result.error) || 'save_failed');
-      showStatus(result.duplicate ? '문의가 접수되었습니다. (동일 연락처의 기존 문의가 있어 별도로 보관됩니다)' : '문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
+    dbPromise.then(function (db) {
+      if (!db) throw { code: 'not_granted' };
+      // 전화번호 중복 확인 → 중복이면 별도 컬렉션에 분리 저장
+      return db.collection('inquiries').where('phoneKey', '==', phoneKey).limit(1).get().then(function (snap) {
+        var target = snap.empty ? 'inquiries' : 'inquiries_duplicate';
+        return db.collection(target).add({
+          name: data.name,
+          phone: data.phone,
+          phoneKey: phoneKey,
+          category: data.category,
+          autoTag: autoTag,
+          message: data.message,
+          status: 'new',
+          consentAt: consentAt || new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        });
+      });
+    }).then(function () {
+      showStatus('문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
       form.reset();
       autoTagHint.textContent = '';
       categoryTouchedByUser = false;
@@ -436,17 +497,16 @@
     });
   });
 
-  // --- Admin dashboard (secret key entered per-visit, never stored in this file) ---
-  var ALL_CATEGORIES = ['VIP 가입 문의', '급등주 정보 문의', '테마주 문의', '기타 문의'];
+  // --- Admin dashboard ---
+  var ALL_CATEGORIES = ['소통방 가입 문의', '급등주 정보 문의', '테마주 문의', '기타 문의'];
   var dashToggle = document.getElementById('dashToggle');
   var dashboard = document.getElementById('dashboard');
   var chipRow = document.getElementById('chipRow');
   var dashList = document.getElementById('dashList');
-  var keyLoadBtn = document.getElementById('keyLoadBtn');
-  var adminKeyInput = document.getElementById('adminKeyInput');
   var activeFilter = 'all';
   var mainDocs = [];
   var dupDocs = [];
+  var watching = false;
 
   function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
 
@@ -469,15 +529,13 @@
   }
 
   function cardHtml(d) {
-    var time = d.created_at ? new Date(d.created_at).toLocaleString('ko-KR') : '';
-    var cat = d.category || '기타 문의';
-    var autoTag = d.auto_tag;
+    var time = d.createdAt ? new Date(d.createdAt).toLocaleString('ko-KR') : '';
     return '<div class="inquiry-card">' +
       '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span>' +
-      '<span class="pill up">' + esc(cat) + '</span>' +
-      (autoTag && autoTag !== cat ? '<span class="pill down">자동: ' + esc(autoTag) + '</span>' : '') + '</div>' +
+      '<span class="pill up">' + esc(d.category || '기타 문의') + '</span>' +
+      (d.autoTag && d.autoTag !== d.category ? '<span class="pill down">자동: ' + esc(d.autoTag) + '</span>' : '') + '</div>' +
       '<span class="inquiry-time">' + esc(time) + '</span>' +
-      '<span class="inquiry-meta">' + esc(d.phone) + (d.kakao_id ? ' · 카카오톡 ' + esc(d.kakao_id) : '') + '</span>' +
+      '<span class="inquiry-meta">' + esc(d.phone) + '</span>' +
       '<p class="inquiry-msg">' + esc(d.message) + '</p></div>';
   }
 
@@ -486,36 +544,29 @@
     dashList.innerHTML = list.length ? list.map(cardHtml).join('') : '<div class="empty-state">해당 조건의 문의가 없습니다.</div>';
   }
 
-  function loadDashboard() {
-    var key = adminKeyInput.value.trim();
-    if (!key) return;
-    if (!supabaseClient) {
-      dashList.innerHTML = '<div class="empty-state">Supabase 연동 정보가 설정되지 않았습니다.</div>';
-      return;
-    }
-    dashList.innerHTML = '<div class="empty-state">불러오는 중...</div>';
-    supabaseClient.rpc('get_inquiries', { p_admin_key: key }).then(function (res) {
-      if (res.error) throw res.error;
-      var result = res.data;
-      if (!result || !result.ok) throw new Error((result && result.error) || 'unauthorized');
-      mainDocs = result.main || [];
-      dupDocs = result.duplicates || [];
-      renderChips();
-      renderList();
-    }).catch(function () {
-      dashList.innerHTML = '<div class="empty-state">비밀키가 올바르지 않거나 데이터를 불러오지 못했습니다.</div>';
+  function startWatching() {
+    if (watching) return;
+    watching = true;
+    dbPromise.then(function (db) {
+      if (!db) { dashList.innerHTML = '<div class="empty-state">관리자 로그인 상태에서만 문의 현황을 볼 수 있습니다.</div>'; return; }
+      db.collection('inquiries').orderBy('createdAt', 'desc').limit(200).onSnapshot(function (snap) {
+        mainDocs = snap.docs.map(function (d) { return d.data(); });
+        renderChips(); renderList();
+      });
+      db.collection('inquiries_duplicate').orderBy('createdAt', 'desc').limit(200).onSnapshot(function (snap) {
+        dupDocs = snap.docs.map(function (d) { return d.data(); });
+        renderChips(); renderList();
+      });
     });
   }
-
-  keyLoadBtn.addEventListener('click', loadDashboard);
-  adminKeyInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') loadDashboard(); });
 
   dashToggle.addEventListener('click', function () {
     var showing = dashboard.classList.toggle('show');
     dashToggle.textContent = showing ? '문의 현황 숨기기' : '문의 현황 보기 (관리자)';
-    if (showing) dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (showing) { startWatching(); dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
   });
 })();
 </script>
+
 </body>
 </html>
