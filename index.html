@@ -388,8 +388,9 @@
 
   function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
 
-  // --- DB wiring (Claude db capability: signed-in org viewers only) ---
-  var dbPromise = (window.claude && window.claude.use) ? window.claude.use('db') : Promise.resolve(null);
+  // --- Supabase REST wiring (works in normal Chrome/Vercel) ---
+  var SUPABASE_URL = 'https://ptkmxhbwsxtddulgbmmc.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_x6gtjahnRsnOF90Ci8-x8A_6V5T88HY';
   var form = document.getElementById('inquiryForm');
   var statusEl = document.getElementById('formStatus');
   var submitBtn = document.getElementById('submitBtn');
@@ -399,46 +400,51 @@
     statusEl.className = 'form-status show ' + (ok ? 'ok' : 'err');
   }
 
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
     var data = {
       name: form.name.value.trim(),
       phone: form.phone.value.trim(),
       consent: form.consent.checked
     };
-    if (!data.name || !data.phone || !data.consent) {
-      showStatus('필수 항목을 모두 입력하고 개인정보 동의에 체크해주세요.', false);
+    var phoneKey = normalizePhone(data.phone);
+    if (!data.name || phoneKey.length < 9 || !data.consent) {
+      showStatus('이름·연락처를 확인하고 개인정보 동의에 체크해주세요.', false);
       return;
     }
 
-    var phoneKey = normalizePhone(data.phone);
     submitBtn.disabled = true;
     submitBtn.textContent = '전송 중...';
-
-    dbPromise.then(function (db) {
-      if (!db) throw { code: 'not_granted' };
-      // 전화번호 중복 확인 → 중복이면 별도 컬렉션에 분리 저장
-      return db.collection('inquiries').where('phoneKey', '==', phoneKey).limit(1).get().then(function (snap) {
-        var target = snap.empty ? 'inquiries' : 'inquiries_duplicate';
-        return db.collection(target).add({
-          name: data.name,
-          phone: data.phone,
-          phoneKey: phoneKey,
-          status: 'new',
-          consentAt: consentAt || new Date().toISOString(),
-          createdAt: new Date().toISOString()
-        });
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/submit_inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        },
+        body: JSON.stringify({
+          p_name: data.name,
+          p_phone: data.phone,
+          p_kakao_id: null,
+          p_category: '웹 문의',
+          p_message: '경제주식 소통방 문의',
+          p_consent_at: consentAt || new Date().toISOString()
+        })
       });
-    }).then(function () {
-      showStatus('문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var result = await res.json();
+      if (!result || result.ok !== true) throw new Error(result && result.error || 'submit_failed');
+      showStatus(result.duplicate ? '문의가 접수되었습니다. 기존 연락처와 동일하여 중복 문의로 분류했습니다.' : '문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
       form.reset();
       consentAt = null;
-    }).catch(function () {
-      showStatus('지금은 자동 저장을 사용할 수 없습니다. 잠시 후 다시 시도하거나 다른 채널로 문의해주세요.', false);
-    }).finally(function () {
+    } catch (err) {
+      console.error('Inquiry submit failed:', err);
+      showStatus('문의 저장에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
+    } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = '문의 남기기';
-    });
+    }
   });
 
   // --- Admin dashboard ---
@@ -479,17 +485,8 @@
   function startWatching() {
     if (watching) return;
     watching = true;
-    dbPromise.then(function (db) {
-      if (!db) { dashList.innerHTML = '<div class="empty-state">관리자 로그인 상태에서만 문의 현황을 볼 수 있습니다.</div>'; return; }
-      db.collection('inquiries').orderBy('createdAt', 'desc').limit(200).onSnapshot(function (snap) {
-        mainDocs = snap.docs.map(function (d) { return d.data(); });
-        renderChips(); renderList();
-      });
-      db.collection('inquiries_duplicate').orderBy('createdAt', 'desc').limit(200).onSnapshot(function (snap) {
-        dupDocs = snap.docs.map(function (d) { return d.data(); });
-        renderChips(); renderList();
-      });
-    });
+    renderChips();
+    dashList.innerHTML = '<div class="empty-state">개인정보 보호를 위해 공개 페이지에서는 문의 목록을 조회하지 않습니다. 관리자 조회는 별도 인증 화면에서 연결해야 합니다.</div>';
   }
 
   dashToggle.addEventListener('click', function () {
