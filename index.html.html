@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>경제주식</title>
+</head>
+<body>
+<style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #FBF6F1;
+    --surface: #FFFFFF;
+    --surface-alt: #F2E8DD;
+    --ink: #1C1512;
+    --ink-muted: #7A6A5E;
+    --up: #E1402A;
+    --up-soft: #FBE4DF;
+    --down: #2F62D6;
+    --down-soft: #E3EBFB;
+    --gold: #B67C15;
+    --gold-soft: #F6E7C4;
+    --border: #E4D5C4;
+    --shadow: 0 20px 40px -28px rgba(28, 21, 18, 0.35);
+    --focus: #E1402A;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15100E;
+      --surface: #1E1714;
+      --surface-alt: #251C17;
+      --ink: #F6EEE7;
+      --ink-muted: #A8998C;
+      --up: #FF5B45;
+      --up-soft: #3A1E19;
+      --down: #6E93FF;
+      --down-soft: #1B2542;
+      --gold: #F0B429;
+      --gold-soft: #3A2C11;
+      --border: #362A22;
+      --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #15100E;
+    --surface: #1E1714;
+    --surface-alt: #251C17;
+    --ink: #F6EEE7;
+    --ink-muted: #A8998C;
+    --up: #FF5B45;
+    --up-soft: #3A1E19;
+    --down: #6E93FF;
+    --down-soft: #1B2542;
+    --gold: #F0B429;
+    --gold-soft: #3A2C11;
+    --border: #362A22;
+    --shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .display { font-family: 'Black Han Sans', 'Noto Sans KR', sans-serif; }
+
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* Ticker */
+  .ticker-bar { background: var(--ink); color: var(--bg); overflow: hidden; white-space: nowrap; border-bottom: 1px solid var(--border); }
+  .ticker-track { display: inline-flex; align-items: center; gap: 40px; padding: 7px 0; animation: ticker 32s linear infinite; }
+  .ticker-bar:hover .ticker-track { animation-play-state: paused; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-item { font-family: 'JetBrains Mono', monospace; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; opacity: 0.92; }
+  .ticker-item .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .dot.up { background: var(--up); }
+  .dot.down { background: var(--down); }
+  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
+
+  /* Header */
+  header.site { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand-mark { font-size: 20px; letter-spacing: -0.01em; }
+  .brand-tag { font-size: 11.5px; color: var(--ink-muted); font-family: 'JetBrains Mono', monospace; }
+  .nav-links { display: flex; align-items: center; gap: 24px; }
+  .nav-links a { font-size: 14px; text-decoration: none; color: var(--ink-muted); transition: color 0.15s ease; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid transparent; text-decoration: none; font-family: inherit; transition: transform 0.12s ease, filter 0.12s ease; white-space: nowrap; }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--up); color: #FFF8F6; }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-ghost { background: transparent; color: var(--ink); border-color: var(--border); }
+  .btn-ghost:hover { background: var(--surface-alt); }
+  .btn-sm { padding: 8px 15px; font-size: 12.5px; }
+
+  /* Hero */
+  .hero { padding: 48px 24px 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--up); letter-spacing: 0.04em; text-transform: uppercase; background: var(--up-soft); padding: 5px 11px; border-radius: 999px; margin-bottom: 14px; }
+  .hero h1 { font-size: 38px; line-height: 1.16; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 14px; }
+  .hero h1 em { font-style: normal; color: var(--up); }
+  .hero p.lead { font-size: 15.5px; color: var(--ink-muted); max-width: 42ch; margin-bottom: 22px; }
+  .hero-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Quote board */
+  .board { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
+  .board-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .board-head .title { font-weight: 700; font-size: 14px; }
+  .board-head .live { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); }
+  .live .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+  .board-row { display: grid; grid-template-columns: 26px 1fr auto; gap: 12px; align-items: center; padding: 11px 18px; border-bottom: 1px solid var(--border); font-size: 13.5px; }
+  .board-row:last-of-type { border-bottom: none; }
+  .board-row .rank { font-family: 'JetBrains Mono', monospace; color: var(--ink-muted); font-size: 12px; }
+  .board-row .name { font-weight: 600; }
+  .board-row .name small { display: block; font-weight: 400; color: var(--ink-muted); font-size: 11.5px; margin-top: 2px; }
+  .pill { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+  .pill.up { background: var(--up-soft); color: var(--up); }
+  .pill.down { background: var(--down-soft); color: var(--down); }
+  .board-foot { padding: 9px 18px; font-size: 11px; color: var(--ink-muted); background: var(--surface-alt); }
+
+  /* Sections */
+  section { padding: 52px 24px; }
+  .section-head { max-width: 58ch; margin-bottom: 28px; }
+  .section-head .eyebrow { margin-bottom: 10px; }
+  .section-head h2 { font-size: 26px; font-weight: 900; margin-bottom: 8px; }
+  .section-head p { color: var(--ink-muted); font-size: 14.5px; }
+
+  .features { background: var(--surface-alt); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .card .num { font-family: 'JetBrains Mono', monospace; color: var(--up); font-weight: 700; font-size: 12px; }
+  .card h3 { font-size: 16px; font-weight: 700; }
+  .card p { color: var(--ink-muted); font-size: 13.5px; margin: 0; }
+
+  /* Tiers */
+  .tier-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .tier-table th, .tier-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .tier-table th { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-muted); font-weight: 600; background: var(--surface-alt); }
+  .tier-table th:not(:first-child), .tier-table td:not(:first-child) { text-align: center; width: 130px; }
+  .tier-table tr:last-child td { border-bottom: none; }
+  .tier-table .yes { color: var(--up); font-weight: 700; }
+  .tier-table .no { color: var(--ink-muted); }
+  .tier-badge { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: var(--gold-soft); color: var(--gold); padding: 2px 7px; border-radius: 6px; margin-left: 6px; }
+  .table-scroll { overflow-x: auto; }
+
+  /* Notice */
+  .notice { display: flex; gap: 14px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .notice svg { flex-shrink: 0; margin-top: 2px; color: var(--gold); }
+  .notice p { font-size: 13px; color: var(--ink-muted); margin: 0; }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .field .hint { font-size: 11.5px; color: var(--ink-muted); font-weight: 400; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  input, select, textarea { font-family: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 10px 12px; width: 100%; }
+  textarea { resize: vertical; min-height: 84px; }
+  .auto-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--up); font-family: 'JetBrains Mono', monospace; margin-top: 2px; min-height: 15px; }
+  .consent-block { margin: 4px 0 16px; }
+  .checkbox-row { display: flex; align-items: flex-start; gap: 9px; }
+  .checkbox-row input { width: 17px; height: 17px; margin-top: 1px; flex-shrink: 0; }
+  .checkbox-row input:disabled { opacity: 0.45; cursor: not-allowed; }
+  .checkbox-row input:disabled + label { color: var(--ink-muted); }
+  .checkbox-row label { font-size: 13px; font-weight: 600; }
+  .consent-detail { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; background: var(--surface-alt); }
+  .consent-detail .consent-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .consent-detail .consent-title { font-size: 13px; font-weight: 600; color: var(--ink); margin: 0; }
+  .consent-detail .consent-head .checkbox-row { margin: 0; align-items: center; }
+  .consent-detail ul { margin: 8px 0 0; padding-left: 16px; font-size: 12px; color: var(--ink-muted); line-height: 1.7; }
+  .form-status { font-size: 13px; padding: 10px 13px; border-radius: 9px; margin-top: 4px; display: none; }
+  .form-status.show { display: block; }
+  .form-status.ok { background: var(--up-soft); color: var(--up); }
+  .form-status.err { background: var(--down-soft); color: var(--down); }
+
+  .side-card { background: var(--ink); color: var(--bg); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px; height: fit-content; }
+  .side-card h3 { font-size: 17px; }
+  .side-card p { font-size: 13px; opacity: 0.75; margin: 0; }
+  .side-row { display: flex; justify-content: space-between; font-size: 12.5px; font-family: 'JetBrains Mono', monospace; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; }
+
+  /* Dashboard */
+  .dashboard { border-top: 1px solid var(--border); background: var(--surface-alt); display: none; }
+  .dashboard.show { display: block; }
+  .dash-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); color: var(--ink-muted); cursor: pointer; }
+  .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .chip.dup.active { background: var(--down); border-color: var(--down); }
+  .chip .count { opacity: 0.7; margin-left: 4px; }
+  .dash-list { display: flex; flex-direction: column; gap: 9px; }
+  .inquiry-card { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; align-items: start; }
+  .inquiry-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .inquiry-name { font-weight: 700; font-size: 14px; }
+  .inquiry-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); }
+  .inquiry-msg { font-size: 13px; color: var(--ink-muted); grid-column: 1 / -1; margin: 0; }
+  .inquiry-time { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+  .empty-state { text-align: center; padding: 32px 20px; color: var(--ink-muted); font-size: 13.5px; }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 24px; text-align: center; }
+  footer p { font-size: 12px; color: var(--ink-muted); margin: 3px 0; }
+
+  @media (max-width: 860px) {
+    .hero-grid, .contact-grid { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 30px; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="ticker-bar" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<header class="site">
+  <div class="nav wrap">
+    <div class="brand">
+      <span class="brand-mark display">경제주식</span>
+      <span class="brand-tag">ECONOMIC STOCK</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">서비스</a>
+      <a href="#tiers">등급</a>
+      <a href="#contact">문의</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#contact">소통방 문의하기</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">실시간 테마 모니터링</span>
+      <h1 class="display">시장보다 먼저 보는<br><em>테마 브리핑</em></h1>
+      <p class="lead">급등주·테마주 흐름을 매일 정리해 전달하는 정보 채널입니다.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#contact">소통방 문의하기</a>
+        <a class="btn btn-ghost" href="#features">서비스 살펴보기</a>
+      </div>
+    </div>
+    <div class="board">
+      <div class="board-head"><span class="title">오늘의 관심 테마</span><span class="live"><span class="pulse"></span>LIVE</span></div>
+      <div id="boardRows"></div>
+      <div class="board-foot">예시 데이터 · 실제 편입 종목은 소통방 리포트에서 확인</div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">서비스 소개</span>
+      <h2>세 가지로 시장을 정리합니다</h2>
+    </div>
+    <div class="card-grid">
+      <div class="card"><span class="num mono">01</span><h3>데일리 테마 브리핑</h3><p>전일 수급과 뉴스를 바탕으로 오늘의 주목 테마를 아침마다 정리합니다.</p></div>
+      <div class="card"><span class="num mono">02</span><h3>급등 후보 스크리닝</h3><p>거래대금 변화가 감지된 종목군과 체크포인트를 안내합니다.</p></div>
+      <div class="card"><span class="num mono">03</span><h3>소통방 상세 노트</h3><p>테마 배경과 리스크까지 정리한 상세 노트를 소통방 회원에게 제공합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="tiers">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">등급 안내</span><h2>무료 브리핑과 소통방 혜택</h2></div>
+    <div class="table-scroll">
+      <table class="tier-table">
+        <thead><tr><th>제공 내용</th><th>무료</th><th>소통방<span class="tier-badge">추천</span></th></tr></thead>
+        <tbody>
+          <tr><td>데일리 테마 브리핑</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+          <tr><td>급등 후보 스크리닝 리스트</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>소통방 상세 노트</td><td class="no">—</td><td class="yes">✓</td></tr>
+          <tr><td>카카오톡 우선 알림·응대</td><td class="no">—</td><td class="yes">✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head"><span class="eyebrow">문의</span><h2>궁금한 점을 남겨주세요</h2><p>이름과 연락처를 남겨주시면 순서대로 연락드리겠습니다.</p></div>
+    <div class="contact-grid">
+      <form id="inquiryForm" novalidate>
+        <div class="field-row">
+          <div class="field"><label for="f-name">이름</label><input id="f-name" name="name" type="text" required autocomplete="name" placeholder="홍길동" /></div>
+          <div class="field"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000" /></div>
+        </div>
+        <div class="consent-block">
+          <div class="consent-detail" id="consentDetails">
+            <div class="consent-head">
+              <p class="consent-title">개인정보 수집·이용 안내 (필수)</p>
+              <div class="checkbox-row">
+                <input id="f-consent" name="consent" type="checkbox" required />
+                <label for="f-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
+              </div>
+            </div>
+            <ul>
+              <li>수집 항목: 이름, 연락처</li>
+              <li>수집·이용 목적: 문의·상담 접수 및 답변</li>
+              <li>보유·이용 기간: 문의 처리 완료 후 1년 보관 후 파기</li>
+              <li>동의를 거부할 권리가 있으며, 미동의 시 문의 접수가 제한될 수 있습니다.</li>
+            </ul>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit" id="submitBtn">문의 남기기</button>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      </form>
+
+      <aside class="side-card">
+        <div><h3 class="display">경제주식</h3><p>급등주·테마주 정보를 정리해 전달하는 채널입니다.</p></div>
+        <div class="side-row"><span>응대 시간</span><span>평일 10:00–18:00</span></div>
+        <div class="side-row"><span>평균 응답</span><span>영업일 1일 이내</span></div>
+        <button class="btn btn-ghost btn-sm" id="dashToggle" style="align-self: flex-start; border-color: rgba(255,255,255,0.3); color: inherit;">문의 현황 보기 (관리자)</button>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard" id="dashboard">
+  <div class="wrap">
+    <div class="dash-head">
+      <div><span class="eyebrow">관리자 뷰</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">문의 현황</h2></div>
+      <div class="chip-row" id="chipRow"></div>
+    </div>
+    <div class="dash-list" id="dashList"><div class="empty-state">아직 저장된 문의가 없습니다.</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="display" style="font-size:14px;">경제주식</p>
+    <p>정보 제공 목적이며 투자 권유가 아닙니다. 투자 손실 책임은 본인에게 있습니다.</p>
+    <p>© 2026 경제주식</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var THEMES = [
+    { name: 'AI 반도체', note: '수급 유입 지속', status: 'up' },
+    { name: '2차전지', note: '단기 변동성 확대', status: 'down' },
+    { name: '로봇', note: '거래대금 상위 진입', status: 'up' },
+    { name: '방산', note: '이슈 모멘텀 지속', status: 'up' },
+    { name: '바이오', note: '숨고르기 국면', status: 'down' }
+  ];
+
+  var boardRows = document.getElementById('boardRows');
+  THEMES.forEach(function (t, i) {
+    var row = document.createElement('div');
+    row.className = 'board-row';
+    row.innerHTML = '<span class="rank">' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<span class="name">' + t.name + '<small>' + t.note + '</small></span>' +
+      '<span class="pill ' + t.status + '">' + (t.status === 'up' ? '관심급증' : '숨고르기') + '</span>';
+    boardRows.appendChild(row);
+  });
+
+  var tickerTrack = document.getElementById('tickerTrack');
+  var tickerItems = THEMES.concat(THEMES).map(function (t) {
+    return '<span class="ticker-item"><span class="dot ' + t.status + '"></span>' + t.name + ' · ' + t.note + '</span>';
+  }).join('');
+  tickerTrack.innerHTML = tickerItems + tickerItems;
+
+  // --- Consent timestamp: captured at the moment the checkbox is checked ---
+  var consentEl = document.getElementById('f-consent');
+  var consentAt = null;
+
+  consentEl.addEventListener('change', function () {
+    consentAt = this.checked ? new Date().toISOString() : null;
+  });
+
+  function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
+
+  // --- Supabase REST wiring (works in normal Chrome/Vercel) ---
+  var SUPABASE_URL = 'https://ptkmxhbwsxtddulgbmmc.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_x6gtjahnRsnOF90Ci8-x8A_6V5T88HY';
+  var form = document.getElementById('inquiryForm');
+  var statusEl = document.getElementById('formStatus');
+  var submitBtn = document.getElementById('submitBtn');
+
+  function showStatus(msg, ok) {
+    statusEl.textContent = msg;
+    statusEl.className = 'form-status show ' + (ok ? 'ok' : 'err');
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var data = {
+      name: form.name.value.trim(),
+      phone: form.phone.value.trim(),
+      consent: form.consent.checked
+    };
+    var phoneKey = normalizePhone(data.phone);
+    if (!data.name || phoneKey.length < 9 || !data.consent) {
+      showStatus('이름·연락처를 확인하고 개인정보 동의에 체크해주세요.', false);
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '전송 중...';
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/submit_inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        },
+        body: JSON.stringify({
+          p_name: data.name,
+          p_phone: data.phone,
+          p_kakao_id: null,
+          p_category: '웹 문의',
+          p_message: '경제주식 소통방 문의',
+          p_consent_at: consentAt || new Date().toISOString()
+        })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var result = await res.json();
+      if (!result || result.ok !== true) throw new Error(result && result.error || 'submit_failed');
+      showStatus(result.duplicate ? '문의가 접수되었습니다. 기존 연락처와 동일하여 중복 문의로 분류했습니다.' : '문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
+      form.reset();
+      consentAt = null;
+    } catch (err) {
+      console.error('Inquiry submit failed:', err);
+      showStatus('문의 저장에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '문의 남기기';
+    }
+  });
+
+  // --- Admin dashboard ---
+  var dashToggle = document.getElementById('dashToggle');
+  var dashboard = document.getElementById('dashboard');
+  var chipRow = document.getElementById('chipRow');
+  var dashList = document.getElementById('dashList');
+  var activeFilter = 'all';
+  var mainDocs = [];
+  var dupDocs = [];
+  var watching = false;
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+
+  function renderChips() {
+    var chips = ['<button type="button" class="chip ' + (activeFilter === 'all' ? 'active' : '') + '" data-cat="all">전체 <span class="count">' + mainDocs.length + '</span></button>'];
+    chips.push('<button type="button" class="chip dup ' + (activeFilter === 'dup' ? 'active' : '') + '" data-cat="dup">중복 전화번호 <span class="count">' + dupDocs.length + '</span></button>');
+    chipRow.innerHTML = chips.join('');
+    Array.prototype.forEach.call(chipRow.querySelectorAll('.chip'), function (btn) {
+      btn.addEventListener('click', function () { activeFilter = btn.getAttribute('data-cat'); renderChips(); renderList(); });
+    });
+  }
+
+  function cardHtml(d) {
+    var time = d.createdAt ? new Date(d.createdAt).toLocaleString('ko-KR') : '';
+    return '<div class="inquiry-card">' +
+      '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span></div>' +
+      '<span class="inquiry-time">' + esc(time) + '</span>' +
+      '<span class="inquiry-meta">' + esc(d.phone) + '</span>' +
+      '</div>';
+  }
+
+  function renderList() {
+    var list = activeFilter === 'dup' ? dupDocs : mainDocs;
+    dashList.innerHTML = list.length ? list.map(cardHtml).join('') : '<div class="empty-state">해당 조건의 문의가 없습니다.</div>';
+  }
+
+  function startWatching() {
+    if (watching) return;
+    watching = true;
+    renderChips();
+    dashList.innerHTML = '<div class="empty-state">개인정보 보호를 위해 공개 페이지에서는 문의 목록을 조회하지 않습니다. 관리자 조회는 별도 인증 화면에서 연결해야 합니다.</div>';
+  }
+
+  dashToggle.addEventListener('click', function () {
+    var showing = dashboard.classList.toggle('show');
+    dashToggle.textContent = showing ? '문의 현황 숨기기' : '문의 현황 보기 (관리자)';
+    if (showing) { startWatching(); dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+})();
+</script>
+
+</body>
+</html>
