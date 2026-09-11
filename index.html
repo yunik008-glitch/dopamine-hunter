@@ -254,10 +254,18 @@
             <div class="field"><label for="hero-name">이름</label><input id="hero-name" type="text" placeholder="홍길동"></div>
             <div class="field"><label for="hero-phone">연락처</label><input id="hero-phone" type="tel" placeholder="010-0000-0000"></div>
           </div>
-          <label style="display:flex; gap:8px; align-items:flex-start; font-size:12px; margin:4px 0 12px;">
-            <input id="hero-consent" type="checkbox" style="width:16px;height:16px;margin-top:2px;">
-            개인정보 수집·이용에 동의합니다 (필수)
-          </label>
+          <div class="consent-detail" style="margin:4px 0 12px;">
+            <div class="checkbox-row">
+              <input id="hero-consent" type="checkbox" style="width:16px;height:16px;margin-top:2px;">
+              <label for="hero-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
+            </div>
+            <ul>
+              <li>수집 항목: 이름, 휴대전화번호, 상담 신청일시</li>
+              <li>이용 목적: 상담 신청 접수, 고객 연락, 상담 진행 및 문의 이력 관리</li>
+              <li>보유 기간: 상담 처리 완료 후 1년</li>
+              <li>동의를 거부할 권리가 있으며, 미동의 시 상담 신청이 제한됩니다.</li>
+            </ul>
+          </div>
           <button class="btn btn-primary" type="button" id="hero-submit">문의 남기기</button>
           <div class="form-status" id="hero-status" role="status"></div>
         </div>
