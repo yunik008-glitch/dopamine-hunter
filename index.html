@@ -238,9 +238,7 @@
     <nav class="nav-links">
       <a href="#features">서비스</a>
       <a href="#tiers">등급</a>
-      <a href="#contact">문의</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="#contact">소통방 문의하기</a>
   </div>
 </header>
 
@@ -250,8 +248,20 @@
       <span class="eyebrow">실시간 테마 모니터링</span>
       <h1 class="display">시장보다 먼저 보는<br><em>테마 브리핑</em></h1>
       <p class="lead">급등주·테마주 흐름을 매일 정리해 전달하는 정보 채널입니다.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#contact">소통방 문의하기</a>
+        <div id="hero-inquiry" class="hero-inquiry" style="margin-top:18px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:var(--shadow);">
+          <div style="font-weight:800; margin-bottom:10px;">상담 문의</div>
+          <div class="field-row">
+            <div class="field"><label for="hero-name">이름</label><input id="hero-name" type="text" placeholder="홍길동"></div>
+            <div class="field"><label for="hero-phone">연락처</label><input id="hero-phone" type="tel" placeholder="010-0000-0000"></div>
+          </div>
+          <label style="display:flex; gap:8px; align-items:flex-start; font-size:12px; margin:4px 0 12px;">
+            <input id="hero-consent" type="checkbox" style="width:16px;height:16px;margin-top:2px;">
+            개인정보 수집·이용에 동의합니다 (필수)
+          </label>
+          <button class="btn btn-primary" type="button" id="hero-submit">문의 남기기</button>
+          <div class="form-status" id="hero-status" role="status"></div>
+        </div>
+      <div class="hero-ctas" style="margin-top:10px;">
         <a class="btn btn-ghost" href="#features">서비스 살펴보기</a>
       </div>
     </div>
@@ -294,50 +304,12 @@
   </div>
 </section>
 
-<section id="contact">
-  <div class="wrap">
-    <div class="section-head"><span class="eyebrow">문의</span><h2>궁금한 점을 남겨주세요</h2><p>이름과 연락처를 남겨주시면 순서대로 연락드리겠습니다.</p></div>
-    <div class="contact-grid">
-      <form id="inquiryForm" novalidate>
-        <div class="field-row">
-          <div class="field"><label for="f-name">이름</label><input id="f-name" name="name" type="text" required autocomplete="name" placeholder="홍길동" /></div>
-          <div class="field"><label for="f-phone">연락처</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel" placeholder="010-0000-0000" /></div>
-        </div>
-        <div class="consent-block">
-          <div class="consent-detail" id="consentDetails">
-            <div class="consent-head">
-              <p class="consent-title">개인정보 수집·이용 안내 (필수)</p>
-              <div class="checkbox-row">
-                <input id="f-consent" name="consent" type="checkbox" required />
-                <label for="f-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
-              </div>
-            </div>
-            <ul>
-              <li>수집 항목: 이름, 연락처</li>
-              <li>수집·이용 목적: 문의·상담 접수 및 답변</li>
-              <li>보유·이용 기간: 문의 처리 완료 후 1년 보관 후 파기</li>
-              <li>동의를 거부할 권리가 있으며, 미동의 시 문의 접수가 제한될 수 있습니다.</li>
-            </ul>
-          </div>
-        </div>
-        <button class="btn btn-primary" type="submit" id="submitBtn">문의 남기기</button>
-        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
-      </form>
 
-      <aside class="side-card">
-        <div><h3 class="display">경제주식</h3><p>급등주·테마주 정보를 정리해 전달하는 채널입니다.</p></div>
-        <div class="side-row"><span>응대 시간</span><span>평일 10:00–18:00</span></div>
-        <div class="side-row"><span>평균 응답</span><span>영업일 1일 이내</span></div>
-        <button class="btn btn-ghost btn-sm" id="dashToggle" style="align-self: flex-start; border-color: rgba(255,255,255,0.3); color: inherit;">문의 현황 보기 (관리자)</button>
-      </aside>
-    </div>
-  </div>
-</section>
 
 <section class="dashboard" id="dashboard">
   <div class="wrap">
     <div class="dash-head">
-      <div><span class="eyebrow">관리자 뷰</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">문의 현황</h2></div>
+      <div><span class="eyebrow">관리자 DB</span><h2 style="font-size:20px; font-weight:900; margin-top:8px;">상담 문의 현황</h2></div>
       <div class="chip-row" id="chipRow"></div>
     </div>
     <div class="dash-list" id="dashList"><div class="empty-state">아직 저장된 문의가 없습니다.</div></div>
@@ -349,6 +321,7 @@
     <p class="display" style="font-size:14px;">경제주식</p>
     <p>정보 제공 목적이며 투자 권유가 아닙니다. 투자 손실 책임은 본인에게 있습니다.</p>
     <p>© 2026 경제주식</p>
+    <button class="btn btn-ghost btn-sm" id="dashToggle" style="margin-top:10px; font-size:11px; opacity:.65;">관리자</button>
   </div>
 </footer>
 
@@ -379,75 +352,52 @@
   tickerTrack.innerHTML = tickerItems + tickerItems;
 
   // --- Consent timestamp: captured at the moment the checkbox is checked ---
-  var consentEl = document.getElementById('f-consent');
-  var consentAt = null;
-
-  consentEl.addEventListener('change', function () {
-    consentAt = this.checked ? new Date().toISOString() : null;
-  });
-
-  function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
-
-  // --- Supabase REST wiring (works in normal Chrome/Vercel) ---
   var SUPABASE_URL = 'https://ptkmxhbwsxtddulgbmmc.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_x6gtjahnRsnOF90Ci8-x8A_6V5T88HY';
-  var form = document.getElementById('inquiryForm');
-  var statusEl = document.getElementById('formStatus');
-  var submitBtn = document.getElementById('submitBtn');
 
-  function showStatus(msg, ok) {
-    statusEl.textContent = msg;
-    statusEl.className = 'form-status show ' + (ok ? 'ok' : 'err');
+  function normalizePhone(p) { return (p || '').replace(/\D/g, ''); }
+  function heroStatus(msg, ok) {
+    var el = document.getElementById('hero-status');
+    el.textContent = msg;
+    el.className = 'form-status show ' + (ok ? 'ok' : 'err');
   }
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    var data = {
-      name: form.name.value.trim(),
-      phone: form.phone.value.trim(),
-      consent: form.consent.checked
-    };
-    var phoneKey = normalizePhone(data.phone);
-    if (!data.name || phoneKey.length < 9 || !data.consent) {
-      showStatus('이름·연락처를 확인하고 개인정보 동의에 체크해주세요.', false);
+  document.getElementById('hero-submit').addEventListener('click', async function () {
+    var btn = this;
+    var name = document.getElementById('hero-name').value.trim();
+    var phone = document.getElementById('hero-phone').value.trim();
+    var consent = document.getElementById('hero-consent').checked;
+    if (!name || normalizePhone(phone).length < 9 || !consent) {
+      heroStatus('이름·연락처를 확인하고 개인정보 동의에 체크해주세요.', false);
       return;
     }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = '전송 중...';
+    btn.disabled = true;
+    btn.textContent = '전송 중...';
     try {
       var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/submit_inquiry', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY
-        },
+        headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
         body: JSON.stringify({
-          p_name: data.name,
-          p_phone: data.phone,
-          p_kakao_id: null,
-          p_category: '웹 문의',
-          p_message: '경제주식 소통방 문의',
-          p_consent_at: consentAt || new Date().toISOString()
+          p_name:name, p_phone:phone, p_kakao_id:null, p_category:'웹 문의',
+          p_message:'경제주식 소통방 문의', p_consent_at:new Date().toISOString()
         })
       });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) throw new Error('HTTP '+res.status);
       var result = await res.json();
-      if (!result || result.ok !== true) throw new Error(result && result.error || 'submit_failed');
-      showStatus(result.duplicate ? '문의가 접수되었습니다. 기존 연락처와 동일하여 중복 문의로 분류했습니다.' : '문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
-      form.reset();
-      consentAt = null;
-    } catch (err) {
-      console.error('Inquiry submit failed:', err);
-      showStatus('문의 저장에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
+      if (!result || result.ok !== true) throw new Error('submit_failed');
+      heroStatus('문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
+      document.getElementById('hero-name').value='';
+      document.getElementById('hero-phone').value='';
+      document.getElementById('hero-consent').checked=false;
+    } catch(e) {
+      console.error(e);
+      heroStatus('문의 저장에 실패했습니다. 잠시 후 다시 시도해주세요.', false);
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = '문의 남기기';
+      btn.disabled=false;
+      btn.textContent='문의 남기기';
     }
   });
 
-  // --- Admin dashboard ---
   var dashToggle = document.getElementById('dashToggle');
   var dashboard = document.getElementById('dashboard');
   var chipRow = document.getElementById('chipRow');
@@ -469,11 +419,14 @@
   }
 
   function cardHtml(d) {
-    var time = d.createdAt ? new Date(d.createdAt).toLocaleString('ko-KR') : '';
+    var created = d.created_at || d.createdAt || '';
+    var time = created ? new Date(created).toLocaleString('ko-KR') : '';
     return '<div class="inquiry-card">' +
-      '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span></div>' +
+      '<div class="inquiry-top"><span class="inquiry-name">' + esc(d.name) + '</span>' +
+      '<span class="pill up">' + esc(d.status || 'new') + '</span></div>' +
       '<span class="inquiry-time">' + esc(time) + '</span>' +
       '<span class="inquiry-meta">' + esc(d.phone) + '</span>' +
+      '<p class="inquiry-msg">' + esc(d.category || '') + (d.message ? ' · ' + esc(d.message) : '') + '</p>' +
       '</div>';
   }
 
@@ -482,17 +435,49 @@
     dashList.innerHTML = list.length ? list.map(cardHtml).join('') : '<div class="empty-state">해당 조건의 문의가 없습니다.</div>';
   }
 
-  function startWatching() {
-    if (watching) return;
-    watching = true;
-    renderChips();
-    dashList.innerHTML = '<div class="empty-state">개인정보 보호를 위해 공개 페이지에서는 문의 목록을 조회하지 않습니다. 관리자 조회는 별도 인증 화면에서 연결해야 합니다.</div>';
+  async function loadAdminInquiries(password) {
+    dashList.innerHTML = '<div class="empty-state">DB 불러오는 중...</div>';
+    try {
+      var res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        },
+        body: JSON.stringify({ p_admin_key: password })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var result = await res.json();
+      if (!result || result.ok !== true) {
+        alert('비밀번호가 올바르지 않습니다.');
+        dashboard.classList.remove('show');
+        dashToggle.textContent = '관리자 DB 확인';
+        return;
+      }
+      mainDocs = Array.isArray(result.main) ? result.main : [];
+      dupDocs = Array.isArray(result.duplicates) ? result.duplicates : [];
+      watching = true;
+      renderChips();
+      renderList();
+      dashboard.classList.add('show');
+      dashToggle.textContent = '문의 현황 숨기기';
+      dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (err) {
+      console.error('Admin DB load failed:', err);
+      alert('관리자 DB를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+    }
   }
 
   dashToggle.addEventListener('click', function () {
-    var showing = dashboard.classList.toggle('show');
-    dashToggle.textContent = showing ? '문의 현황 숨기기' : '문의 현황 보기 (관리자)';
-    if (showing) { startWatching(); dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    if (dashboard.classList.contains('show')) {
+      dashboard.classList.remove('show');
+      dashToggle.textContent = '관리자 DB 확인';
+      return;
+    }
+    var password = window.prompt('관리자 비밀번호를 입력하세요.');
+    if (!password) return;
+    loadAdminInquiries(password);
   });
 })();
 </script>
