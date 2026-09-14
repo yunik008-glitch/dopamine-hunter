@@ -254,13 +254,17 @@
             <div class="field"><label for="hero-name">이름</label><input id="hero-name" type="text" placeholder="홍길동"></div>
             <div class="field"><label for="hero-phone">연락처</label><input id="hero-phone" type="tel" placeholder="010-0000-0000"></div>
           </div>
+          <div class="field" style="margin-top:10px;">
+            <label for="hero-stock">지금 시청하신 영상 종목 또는 관심 종목 <span style="font-weight:400; color:var(--ink-muted);">(선택)</span></label>
+            <input id="hero-stock" type="text" placeholder="예: 삼성전자, 로봇, 반도체">
+          </div>
           <div class="consent-detail" style="margin:4px 0 12px;">
             <div class="checkbox-row">
               <input id="hero-consent" type="checkbox" style="width:16px;height:16px;margin-top:2px;">
               <label for="hero-consent">개인정보 수집·이용에 동의합니다 (필수)</label>
             </div>
             <ul>
-              <li>수집 항목: 이름, 휴대전화번호, 상담 신청일시</li>
+              <li>수집 항목: 이름, 휴대전화번호, 관심 종목, 상담 신청일시</li>
               <li>이용 목적: 상담 신청 접수, 고객 연락, 상담 진행 및 문의 이력 관리</li>
               <li>보유 기간: 상담 처리 완료 후 1년</li>
               <li>동의를 거부할 권리가 있으며, 미동의 시 상담 신청이 제한됩니다.</li>
@@ -374,6 +378,7 @@
     var btn = this;
     var name = document.getElementById('hero-name').value.trim();
     var phone = document.getElementById('hero-phone').value.trim();
+    var stock = document.getElementById('hero-stock').value.trim();
     var consent = document.getElementById('hero-consent').checked;
     if (!name || normalizePhone(phone).length < 9 || !consent) {
       heroStatus('이름·연락처를 확인하고 개인정보 동의에 체크해주세요.', false);
@@ -387,7 +392,7 @@
         headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},
         body: JSON.stringify({
           p_name:name, p_phone:phone, p_kakao_id:null, p_category:'웹 문의',
-          p_message:'경제주식 소통방 문의', p_consent_at:new Date().toISOString()
+          p_message:'경제주식 소통방 문의' + (stock ? '\n관심 종목: ' + stock : ''), p_consent_at:new Date().toISOString()
         })
       });
       if (!res.ok) throw new Error('HTTP '+res.status);
@@ -396,6 +401,7 @@
       heroStatus('문의가 접수되었습니다. 순서대로 확인 후 연락드리겠습니다.', true);
       document.getElementById('hero-name').value='';
       document.getElementById('hero-phone').value='';
+      document.getElementById('hero-stock').value='';
       document.getElementById('hero-consent').checked=false;
     } catch(e) {
       console.error(e);
